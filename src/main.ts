@@ -2,6 +2,7 @@ import {
 	FileView,
 	ItemView,
 	MarkdownView,
+	Notice,
 	OpenViewState,
 	Platform,
 	Plugin,
@@ -54,6 +55,10 @@ export default class ObsidianVerticalTabs extends Plugin {
 		await this.updateViewStates();
 		await this.patchViews();
 		this.addSettingTab(new ObsidianVerticalTabsSettingTab(this.app, this));
+
+		// Hello World! - Development test notification
+		new Notice("Hello World! Vertical Tabs plugin loaded successfully! 🎉");
+
 		this.app.workspace.onLayoutReady(() => {
 			this.openVerticalTabs();
 			if (Platform.isMobile && !Platform.isTablet) {

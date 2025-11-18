@@ -2,6 +2,7 @@ import {
 	FileView,
 	ItemView,
 	MarkdownView,
+	Notice,
 	OpenViewState,
 	Platform,
 	Plugin,
@@ -37,6 +38,11 @@ export default class ObsidianVerticalTabs extends Plugin {
 	persistenceManager: PersistenceManager;
 
 	async onload() {
+		console.log("🚀 Vertical Tabs Plugin: Hello World! Plugin is loading...");
+		
+		// Show a visible notification to confirm the plugin is working
+		new Notice("🚀 Vertical Tabs Plugin: Hello World! Plugin loaded successfully!");
+		
 		addIcon("vertical-tabs", VERTICAL_TABS_ICON);
 		await this.loadSettings();
 		await this.setupPersistenceManager();

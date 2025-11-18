@@ -56,3 +56,15 @@ As *the* workspace manager for Obsidian, Vertical Tabs provides many handy featu
 
 ![Screenshot](./images/hero.png)
 
+---
+
+## For Developers
+
+Want to contribute or set up a development environment? Check out [DEVELOPMENT.md](./DEVELOPMENT.md) for setup instructions.
+
+Quick start:
+- **Windows**: Run `.\setup-dev.ps1`
+- **macOS/Linux**: Run `./setup-dev.sh`
+
+The setup scripts will handle dependency installation, building, and symlink creation automatically.
+

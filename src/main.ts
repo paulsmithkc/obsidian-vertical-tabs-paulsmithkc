@@ -2,6 +2,7 @@ import {
 	FileView,
 	ItemView,
 	MarkdownView,
+	Notice,
 	OpenViewState,
 	Platform,
 	Plugin,
@@ -37,32 +38,46 @@ export default class ObsidianVerticalTabs extends Plugin {
 	persistenceManager: PersistenceManager;
 
 	async onload() {
-		addIcon("vertical-tabs", VERTICAL_TABS_ICON);
-		await this.loadSettings();
-		await this.setupPersistenceManager();
-		const disableOnThisDevice =
-			this.persistenceManager.device.get<boolean>(DISABLE_KEY) ?? false;
-		if (disableOnThisDevice) {
-			useSettings.getState().loadSettings(this);
+		try {
+			console.log("Hello World! Vertical Tabs plugin is loading...");
+
+			addIcon("vertical-tabs", VERTICAL_TABS_ICON);
+			await this.loadSettings();
+			await this.setupPersistenceManager();
+			const disableOnThisDevice =
+				this.persistenceManager.device.get<boolean>(DISABLE_KEY) ??
+				false;
+			if (disableOnThisDevice) {
+				useSettings.getState().loadSettings(this);
+				this.addSettingTab(
+					new ObsidianVerticalTabsSettingTab(this.app, this)
+				);
+				new Notice("Hello World! Vertical Tabs plugin loaded!");
+				return;
+			}
+			await this.registerEventsAndViews();
+			await this.setupCommands();
+			await this.updateViewStates();
+			await this.patchViews();
 			this.addSettingTab(
 				new ObsidianVerticalTabsSettingTab(this.app, this)
 			);
-			return;
+			this.app.workspace.onLayoutReady(() => {
+				this.openVerticalTabs();
+				if (Platform.isMobile && !Platform.isTablet) {
+					setTimeout(() => this.app.workspace.leftSplit.collapse());
+				}
+				setTimeout(() => {
+					useViewState.getState().refreshToggleButtons(this.app);
+				}, REFRESH_TIMEOUT_LONG);
+			});
+
+			new Notice("Hello World! Vertical Tabs plugin loaded!");
+		} catch (error) {
+			console.error("Vertical Tabs plugin error:", error);
+			new Notice(`Vertical Tabs plugin error: ${error.message}`);
+			throw error;
 		}
-		await this.registerEventsAndViews();
-		await this.setupCommands();
-		await this.updateViewStates();
-		await this.patchViews();
-		this.addSettingTab(new ObsidianVerticalTabsSettingTab(this.app, this));
-		this.app.workspace.onLayoutReady(() => {
-			this.openVerticalTabs();
-			if (Platform.isMobile && !Platform.isTablet) {
-				setTimeout(() => this.app.workspace.leftSplit.collapse());
-			}
-			setTimeout(() => {
-				useViewState.getState().refreshToggleButtons(this.app);
-			}, REFRESH_TIMEOUT_LONG);
-		});
 	}
 
 	async setupPersistenceManager() {
